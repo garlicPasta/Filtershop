@@ -17,20 +17,19 @@
  */
 #ifndef _GAUSSIANBLUR_
 #define _GAUSSIANBLUR_
+
 #include <QtWidgets/QtWidgets>
+#include <armadillo>
+#include "ImageViewer.hpp"
 
-class Filter : public QWidget
+class Filter
 {
-  Q_OBJECT
-
   public:
-    Filter(QImage *img);
-    
-  public slots:
-    void gaussianBlur();
+    static void gaussianBlur(QImage *img);
+    static void invertImage(QImage *img);
 
   private:
-  QImage *image;
+    static void qImg2armaMat(QImage *img);
 };
 
 #endif

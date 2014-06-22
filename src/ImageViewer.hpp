@@ -1,9 +1,10 @@
-#ifndef IMAGE_VIEWER
-#define IMAGE_VIEWER
+#ifndef _IMAGEVIEWER_
+#define _IMAGEVIEWER_
+
 #include <QtWidgets/QtWidgets>
 #include <QtPrintSupport/QPrinter>
+#include <QtGui/QtGui>
 #include "Filter.hpp"
-
 
 class ImageViewer : public QMainWindow
 {
@@ -11,15 +12,24 @@ class ImageViewer : public QMainWindow
 
 public:
   ImageViewer();
+  ImageViewer(QString filePath);
 
+  QImage *currentImage;
+
+public slots:
+  void updateCanvas();
+    
 private slots:
   void open();
+  void open(QString filename);
   void print();
   void zoomIn();
   void zoomOut();
   void normalSize();
   void fitToWindow();
   void displayInfos();
+  void gaussianBlur();
+  void invertImage();
 
 private:
   void createActions();
@@ -27,11 +37,10 @@ private:
   void updateActions();
   void scaleImage(double factor);
   void adjustScrollBar(QScrollBar *scrollBar, double factor);
+  void drawImage();
 
   QLabel *imageLabel;
   QScrollArea *scrollArea;
-  QImage *currentImage;
-  Filter *filter;
   double scaleFactor;
 
 #ifndef QT_NO_PRINTER
@@ -46,8 +55,8 @@ private:
   QAction *normalSizeAct;
   QAction *fitToWindowAct;
   QAction *gaussianBlurAct;
+  QAction *invertImageAct;
   QAction *pictureInfosAct;
-
   QMenu *fileMenu;
   QMenu *viewMenu;
   QMenu *filterMenu;

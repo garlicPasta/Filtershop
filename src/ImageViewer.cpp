@@ -1,6 +1,5 @@
-#include <QtGui/QtGui>
-#include <QtWidgets/QtWidgets>
 #include "ImageViewer.hpp"
+#include <iostream>
 
 
 ImageViewer::ImageViewer()
@@ -18,26 +17,44 @@ ImageViewer::ImageViewer()
   createActions();
   createMenus();
 
-  setWindowTitle(tr("Image Viewer"));
+  setWindowTitle(tr("Filtershop"));
   resize(500, 400);
+}
+
+ImageViewer::ImageViewer(QString filePath)
+{
+  imageLabel = new QLabel;
+  imageLabel->setBackgroundRole(QPalette::Base);
+  imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+  imageLabel->setScaledContents(true);
+
+  scrollArea = new QScrollArea;
+  scrollArea->setBackgroundRole(QPalette::Dark);
+  scrollArea->setWidget(imageLabel);
+  setCentralWidget(scrollArea);
+
+  createActions();
+  createMenus();
+
+  setWindowTitle(tr("Filtershop"));
+  resize(500, 400);
+
+  if (!filePath.isNull()){
+    open(filePath);
+  }
 }
 
 void ImageViewer::open()
 {
   QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::currentPath());
-
+  std::cout << fileName.toStdString() << std::endl;
   if (!fileName.isEmpty()) {
-    currentImage = new QImage(fileName);
+    this->currentImage = new QImage(fileName);
     if (currentImage->isNull()) {
       QMessageBox::information(this, tr("Image Viewer"),
           tr("Cannot load %1. ").arg(fileName));
       return;
     }
-
-    filter = new Filter(currentImage);
-    connect(gaussianBlurAct , SIGNAL(triggered()), filter, SLOT(gaussianBlur()));
-
-    qDebug() << "message";
 
     imageLabel->setPixmap(QPixmap::fromImage(*currentImage));
     scaleFactor = 1.0;
@@ -51,6 +68,38 @@ void ImageViewer::open()
     if (!fitToWindowAct->isChecked())
       imageLabel->adjustSize();
   }
+}
+
+void ImageViewer::open(QString fileName)
+{
+  if (!fileName.isEmpty()) {
+    this->currentImage = new QImage(fileName);
+    if (currentImage->isNull()) {
+      QMessageBox::information(this, tr("Image Viewer"),
+          tr("Cannot load %1. ").arg(fileName));
+      return;
+    }
+    imageLabel->setPixmap(QPixmap::fromImage(*currentImage));
+    scaleFactor = 1.0;
+
+    printAct->setEnabled(true);
+    fitToWindowAct->setEnabled(true);
+    gaussianBlurAct->setEnabled(true);
+    pictureInfosAct->setEnabled(true);
+    updateActions();
+
+    if (!fitToWindowAct->isChecked())
+      imageLabel->adjustSize();
+  }
+}
+void ImageViewer::drawImage()
+{
+  this->imageLabel->setPixmap(QPixmap::fromImage(*(this->currentImage)));
+}
+
+void ImageViewer::updateCanvas()
+{
+ imageLabel->setPixmap(QPixmap::fromImage(*currentImage));
 }
 
 void ImageViewer::print()
@@ -108,9 +157,11 @@ void ImageViewer::createActions()
   printAct->setShortcut(tr("Ctrl+P"));
   connect(printAct, SIGNAL(triggered()), this, SLOT(print()));
 
+  
   exitAct = new QAction(tr("E&xit..."), this);
   exitAct->setShortcut(tr("Ctrl+X"));
   connect(exitAct, SIGNAL(triggered()), this, SLOT(()));
+  
 
   zoomInAct = new QAction(tr("Zoom &In"), this);
   zoomInAct->setShortcut(tr("Ctrl++"));
@@ -138,10 +189,14 @@ void ImageViewer::createActions()
   pictureInfosAct->setEnabled(false);
   connect(pictureInfosAct , SIGNAL(triggered()), this, SLOT(displayInfos()));
 
-
   gaussianBlurAct = new QAction(tr("&Gaussian Blur"), this);
   gaussianBlurAct->setShortcut(tr("Ctrl+B"));
   gaussianBlurAct->setEnabled(false);
+  connect(gaussianBlurAct, SIGNAL(triggered()), this, SLOT(gaussianBlur()));
+
+  invertImageAct = new QAction(tr("&Invert Image"), this);
+  invertImageAct->setEnabled(false);
+  connect(invertImageAct, SIGNAL(triggered()), this, SLOT(invertImage()));
 }
 
 void ImageViewer::createMenus()
@@ -163,6 +218,7 @@ void ImageViewer::createMenus()
 
   filterMenu = new QMenu(tr("&Filter"));
   filterMenu->addAction(gaussianBlurAct);
+  filterMenu->addAction(invertImageAct);
   
   helpMenu = new QMenu(tr("&Help"), this);
 
@@ -196,5 +252,17 @@ void ImageViewer::adjustScrollBar(QScrollBar *scrollBar, double factor)
 {
   scrollBar->setValue(int(factor * scrollBar->value()
         + ((factor - 1) * scrollBar->pageStep()/2)));
+}
+
+void ImageViewer::gaussianBlur()
+{
+  Filter::gaussianBlur(this->currentImage);
+  drawImage();
+}
+
+void ImageViewer::invertImage()
+{
+  Filter::invertImage(this->currentImage);
+  drawImage();
 }
 
