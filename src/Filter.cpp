@@ -1,8 +1,8 @@
 #include <iostream>
-#include <armadillo>
 #include <QtGui/QtGui>
 #include <armadillo>
 #include "Filter.hpp"
+#include "MatHelper.hpp"
 
 using namespace std;
 using namespace arma;
@@ -10,15 +10,9 @@ using namespace arma;
 
 void Filter::gaussianBlur(QImage *img)
 {
-  int height= img->height();
-  int width = img->width();
-  std::cout << height << "px " << width << "px " << std::endl; 
-  Mat<unsigned char> picMatrix = Mat<unsigned char>(img->bits(), height, width * 4);
-  picMatrix = picMatrix / 2;
-  Mat<int> pMatrix = conv_to<Mat<int>>::from(picMatrix);
-  pMatrix = pMatrix /  2;
-  // picMatrix = conv_to<Mat<unsigned char>>::from(pMatrix);
-  memcpy(img->bits(), picMatrix.memptr(), height * width * 4);
+  Mat<uchar> pMatrix = MatHelper::qImg2Mat(img);
+  pMatrix = pMatrix / 2;
+  MatHelper::sendMatrixtoImage(pMatrix, img);
 }
 
 void Filter::invertImage(QImage *img)

@@ -1,6 +1,14 @@
 #include "ImageViewer.hpp"
 #include <iostream>
 
+// Defined Some usefull Macros
+
+#define CREATEACT(actName, actFunction, label, shortcut) \
+  actName = new QAction(tr(label), this);\
+  actName->setShortcut(tr(shortcut));\
+  connect(actName, SIGNAL(triggered()), this, SLOT(actFunction()));
+
+
 
 ImageViewer::ImageViewer()
 {
@@ -46,23 +54,20 @@ ImageViewer::ImageViewer(QString filePath)
 
 void ImageViewer::open()
 {
-  QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), QDir::currentPath());
-  std::cout << fileName.toStdString() << std::endl;
+  QString fileName = QFileDialog::getOpenFileName(this,
+      tr("Open File"), QDir::currentPath());
   if (!fileName.isEmpty()) {
-    this->currentImage = new QImage(fileName);
+  this->currentImage =  new QImage(fileName);
     if (currentImage->isNull()) {
       QMessageBox::information(this, tr("Image Viewer"),
-          tr("Cannot load %1. ").arg(fileName));
+          tr("Cannot load %1.").arg(fileName));
       return;
     }
-
     imageLabel->setPixmap(QPixmap::fromImage(*currentImage));
     scaleFactor = 1.0;
 
     printAct->setEnabled(true);
     fitToWindowAct->setEnabled(true);
-    gaussianBlurAct->setEnabled(true);
-    pictureInfosAct->setEnabled(true);
     updateActions();
 
     if (!fitToWindowAct->isChecked())
@@ -146,11 +151,24 @@ void ImageViewer::displayInfos()
   messageBox.exec();
 }
 
+void ImageViewer::gaussianBlur()
+{
+  Filter::gaussianBlur(this->currentImage);
+  drawImage();
+}
+
+void ImageViewer::invertImage()
+{
+  Filter::invertImage(this->currentImage);
+  drawImage();
+}
+
 void ImageViewer::createActions()
 {
-  openAct = new QAction(tr("&Open..."), this);
-  openAct->setShortcut(tr("Ctrl+O"));
-  connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
+  //openAct = new QAction(tr("&Open..."), this);
+  //openAct->setShortcut(tr("Ctrl+O"));
+  //connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
+  CREATEACT(openAct, open, "&Open", "Ctrl+O");
 
   printAct = new QAction(tr("&Print..."), this);
   printAct->setEnabled(false);
@@ -233,6 +251,7 @@ void ImageViewer::updateActions()
   zoomInAct->setEnabled(!fitToWindowAct->isChecked());
   zoomOutAct->setEnabled(!fitToWindowAct->isChecked());
   normalSizeAct->setEnabled(!fitToWindowAct->isChecked());
+  gaussianBlurAct->setEnabled(true);
 }
 
 void ImageViewer::scaleImage(double factor)
@@ -254,15 +273,4 @@ void ImageViewer::adjustScrollBar(QScrollBar *scrollBar, double factor)
         + ((factor - 1) * scrollBar->pageStep()/2)));
 }
 
-void ImageViewer::gaussianBlur()
-{
-  Filter::gaussianBlur(this->currentImage);
-  drawImage();
-}
-
-void ImageViewer::invertImage()
-{
-  Filter::invertImage(this->currentImage);
-  drawImage();
-}
 

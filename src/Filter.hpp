@@ -27,9 +27,6 @@ class Filter
   public:
     static void gaussianBlur(QImage *img);
     static void invertImage(QImage *img);
-
-  private:
-    static void qImg2armaMat(QImage *img);
 };
 
 #endif
