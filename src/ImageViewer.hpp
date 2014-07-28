@@ -13,7 +13,6 @@ class ImageViewer : public QMainWindow
 public:
   ImageViewer();
   ImageViewer(QString filePath);
-
   QImage *currentImage;
 
 public slots:

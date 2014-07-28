@@ -170,51 +170,60 @@ void ImageViewer::createActions()
   //connect(openAct, SIGNAL(triggered()), this, SLOT(open()));
   CREATEACT(openAct, open, "&Open", "Ctrl+O");
 
-  printAct = new QAction(tr("&Print..."), this);
+  //printAct = new QAction(tr("&Print..."), this);
+  //printAct->setShortcut(tr("Ctrl+P"));
+  //connect(printAct, SIGNAL(triggered()), this, SLOT(print()));
+  CREATEACT(printAct, print,  "&Print", "Ctrl+P")
   printAct->setEnabled(false);
-  printAct->setShortcut(tr("Ctrl+P"));
-  connect(printAct, SIGNAL(triggered()), this, SLOT(print()));
 
   
   exitAct = new QAction(tr("E&xit..."), this);
   exitAct->setShortcut(tr("Ctrl+X"));
   connect(exitAct, SIGNAL(triggered()), this, SLOT(()));
+  //CREATEACT(exitAct, ,"&Exit", "Ctrl+X")
   
 
-  zoomInAct = new QAction(tr("Zoom &In"), this);
-  zoomInAct->setShortcut(tr("Ctrl++"));
+  //zoomInAct = new QAction(tr("Zoom &In"), this);
+  //zoomInAct->setShortcut(tr("Ctrl++"));
+  //connect(zoomInAct, SIGNAL(triggered()), this, SLOT(zoomIn()));
+  CREATEACT(zoomInAct, zoomIn, "Zoom &In", "Ctrl++")
   zoomInAct->setEnabled(false);
-  connect(zoomInAct, SIGNAL(triggered()), this, SLOT(zoomIn()));
 
-  zoomOutAct = new QAction(tr("Zoom &Out"), this);
-  zoomOutAct->setShortcut(tr("Ctrl+-"));
+  //zoomOutAct = new QAction(tr("Zoom &Out"), this);
+  //zoomOutAct->setShortcut(tr("Ctrl+-"));
+  //connect(zoomOutAct, SIGNAL(triggered()), this, SLOT(zoomOut()));
+  CREATEACT(zoomOutAct, zoomOut ,  "&Zoom &Out", "Ctrl+-")
   zoomOutAct->setEnabled(false);
-  connect(zoomOutAct, SIGNAL(triggered()), this, SLOT(zoomOut()));
 
-  normalSizeAct = new QAction(tr("&Normal Size"), this);
-  normalSizeAct->setShortcut(tr("Ctrl+0"));
+  //normalSizeAct = new QAction(tr("&Normal Size"), this);
+  //normalSizeAct->setShortcut(tr("Ctrl+0"));
+  //connect(normalSizeAct, SIGNAL(triggered()), this, SLOT(normalSize()));
+  CREATEACT(normalSizeAct, normalSize,  "Normal Size", "Ctrl+0")
   normalSizeAct->setEnabled(false);
-  connect(normalSizeAct, SIGNAL(triggered()), this, SLOT(normalSize()));
 
-  fitToWindowAct = new QAction(tr("&Fit to Window"), this);
+  //fitToWindowAct = new QAction(tr("&Fit to Window"), this);
+  //fitToWindowAct->setShortcut(tr("Ctrl+F"));
+  //connect(fitToWindowAct, SIGNAL(triggered()), this, SLOT(fitToWindow()));
+  CREATEACT(fitToWindowAct, fitToWindow,  "&Fit to Window", "Ctrl+F")
   fitToWindowAct->setEnabled(false);
   fitToWindowAct->setCheckable(true);
-  fitToWindowAct->setShortcut(tr("Ctrl+F"));
-  connect(fitToWindowAct, SIGNAL(triggered()), this, SLOT(fitToWindow()));
 
-  pictureInfosAct = new QAction(tr("&Bild Informationen"), this);
-  pictureInfosAct->setShortcut(tr("Ctrl+I"));
+  //pictureInfosAct = new QAction(tr("&Bild Informationen"), this);
+  //pictureInfosAct->setShortcut(tr("Ctrl+I"));
+  //connect(pictureInfosAct , SIGNAL(triggered()), this, SLOT(displayInfos()));
+  CREATEACT(pictureInfosAct, displayInfos,  "&Picture Informations", "Ctrl+I")
   pictureInfosAct->setEnabled(false);
-  connect(pictureInfosAct , SIGNAL(triggered()), this, SLOT(displayInfos()));
 
-  gaussianBlurAct = new QAction(tr("&Gaussian Blur"), this);
-  gaussianBlurAct->setShortcut(tr("Ctrl+B"));
+  //gaussianBlurAct = new QAction(tr("&Gaussian Blur"), this);
+  //gaussianBlurAct->setShortcut(tr("Ctrl+B"));
+  //connect(gaussianBlurAct, SIGNAL(triggered()), this, SLOT(gaussianBlur()));
+  CREATEACT(gaussianBlurAct, gaussianBlur,  "&Gaussian Blur", "Ctrl+B")
   gaussianBlurAct->setEnabled(false);
-  connect(gaussianBlurAct, SIGNAL(triggered()), this, SLOT(gaussianBlur()));
 
-  invertImageAct = new QAction(tr("&Invert Image"), this);
+  //invertImageAct = new QAction(tr("&Invert Image"), this);
+  //connect(invertImageAct, SIGNAL(triggered()), this, SLOT(invertImage()));
+  CREATEACT(invertImageAct, invertImage,  "&Invert Image", "Ctrl+2")
   invertImageAct->setEnabled(false);
-  connect(invertImageAct, SIGNAL(triggered()), this, SLOT(invertImage()));
 }
 
 void ImageViewer::createMenus()

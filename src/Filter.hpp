@@ -22,11 +22,14 @@
 #include <armadillo>
 #include "ImageViewer.hpp"
 
+using namespace arma;
+
 class Filter
 {
   public:
     static void gaussianBlur(QImage *img);
     static void invertImage(QImage *img);
+    static Mat<uchar> conv(Mat<uchar> a, Mat<uchar> b);
 };
 
 #endif
