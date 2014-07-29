@@ -3,16 +3,21 @@
 
 #include <QtWidgets/QtWidgets>
 #include <QtPrintSupport/QPrinter>
+#include <QMainWindow>
 #include <QtGui/QtGui>
-#include "Filter.hpp"
+#include "filter.hpp"
 
-class ImageViewer : public QMainWindow
+namespace Ui {
+class MainWindow;
+}
+
+class MainWindow : public QMainWindow
 {
   Q_OBJECT
 
 public:
-  ImageViewer();
-  ImageViewer(QString filePath);
+  explicit MainWindow(QWidget *parent = 0);
+  MainWindow(QString filePath);
   QImage *currentImage;
 
 public slots:
@@ -21,7 +26,6 @@ public slots:
 private slots:
   void open();
   void open(QString filename);
-  void print();
   void zoomIn();
   void zoomOut();
   void normalSize();
@@ -29,6 +33,18 @@ private slots:
   void displayInfos();
   void gaussianBlur();
   void invertImage();
+
+  void on_actionOpen_triggered();
+
+  void on_actionZoom_in_triggered();
+
+  void on_actionZoom_out_triggered();
+
+  void on_actionNormal_size_triggered();
+
+  void on_actionFit_to_window_triggered();
+
+  void on_actionPicture_infos_triggered();
 
 private:
   void createActions();
@@ -38,27 +54,13 @@ private:
   void adjustScrollBar(QScrollBar *scrollBar, double factor);
   void drawImage();
 
-  QLabel *imageLabel;
-  QScrollArea *scrollArea;
   double scaleFactor;
 
 #ifndef QT_NO_PRINTER
   QPrinter printer;
  #endif
 
-  QAction *openAct;
-  QAction *printAct;
-  QAction *exitAct;
-  QAction *zoomInAct;
-  QAction *zoomOutAct;
-  QAction *normalSizeAct;
-  QAction *fitToWindowAct;
-  QAction *gaussianBlurAct;
-  QAction *invertImageAct;
-  QAction *pictureInfosAct;
-  QMenu *fileMenu;
-  QMenu *viewMenu;
-  QMenu *filterMenu;
-  QMenu *helpMenu;
+  Ui::MainWindow * ui;
+
 };
 #endif

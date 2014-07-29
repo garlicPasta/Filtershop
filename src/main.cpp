@@ -16,10 +16,10 @@
  * =====================================================================================
  */
 #include <stdlib.h>
-#include <QtGui/QtGui>
+#include <QApplication>
 #include <iostream>
-#include "ImageViewer.hpp"
-#include "Filter.hpp"
+#include "mainwindow.hpp"
+#include "filter.hpp"
 
 
 int main(int argv, char **args)
@@ -45,11 +45,11 @@ int main(int argv, char **args)
   
   if (options.length() > 100){
     std::cout << "Hello" << std::endl;
-    ImageViewer window(options.first());
+    MainWindow window(options.first());
     window.show();
   }else{
   }
-  ImageViewer window;
+  MainWindow window;
   window.show();
   return app.exec();
 }

@@ -1,9 +1,8 @@
 #include <iostream>
 #include <QtGui/QtGui>
 #include <armadillo>
-#include "Filter.hpp"
-#include "MatHelper.hpp"
-#include "Picturematrix.h"
+#include "filter.hpp"
+#include "picturematrix.h"
 
 using namespace std;
 using namespace arma;
@@ -27,3 +26,6 @@ Mat<uchar> conv(Mat<uchar> a, Mat<uchar> b)
   return Mat<uchar>(1,1);
 }
 
+/*void Filter::hideRChannel(QImage *img){
+  Picturematrix pMatrix = PixtureMatrix(img);
+}*/

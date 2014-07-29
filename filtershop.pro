@@ -7,12 +7,18 @@ TARGET = filtershop
 INCLUDEPATH += . src
 
 # Input
-HEADERS += src/Filter.hpp src/ImageViewer.hpp src/MatHelper.hpp \
-    src/Picturematrix.h
-SOURCES += src/Filter.cpp src/ImageViewer.cpp src/main.cpp src/MatHelper.cpp \  
-    src/Picturematrix.cpp
+HEADERS += \
+    src/mainwindow.hpp \
+    src/filter.hpp \
+    src/picturematrix.h
+SOURCES += src/main.cpp \  
+    src/mainwindow.cpp \
+    src/filter.cpp \
+    src/picturematrix.cpp
 CONFIG += testcase
 
 LIBS += -lQt5Widgets -larmadillo
-QT += printsupport widgets
+QT += printsupport widgets core gui
 QMAKE_CXXFLAGS += -std=c++11
+
+FORMS +=  src/mainwindow.ui

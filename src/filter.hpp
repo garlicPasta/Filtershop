@@ -20,7 +20,7 @@
 
 #include <QtWidgets/QtWidgets>
 #include <armadillo>
-#include "ImageViewer.hpp"
+#include "mainwindow.hpp"
 
 using namespace arma;
 
