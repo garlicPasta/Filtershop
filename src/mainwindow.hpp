@@ -18,10 +18,8 @@ class MainWindow : public QMainWindow
 public:
   explicit MainWindow(QWidget *parent = 0);
   MainWindow(QString filePath);
-  QImage *currentImage;
-
-public slots:
-  void updateCanvas();
+  QImage currentImage;
+  QImage coreImage;
     
 private slots:
   void open();
@@ -45,6 +43,16 @@ private slots:
   void on_actionFit_to_window_triggered();
 
   void on_actionPicture_infos_triggered();
+
+  void on_actionGaussian_blur_triggered();
+
+  void on_checkBox_blue_toggled(bool checked);
+
+  void on_checkBox_red_toggled(bool checked);
+
+  void on_checkBox_green_toggled(bool checked);
+
+  void on_pushButton_clicked();
 
 private:
   void createActions();

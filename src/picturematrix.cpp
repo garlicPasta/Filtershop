@@ -4,38 +4,31 @@
 #include <string>
 
 
-PictureMatrix::PictureMatrix(QImage *img)
+PictureMatrix::PictureMatrix(QImage &img)
 {
-  int nTotalPicture = img->height() + 4 * img->width();
-  image = img;
-  matrix = arma::Mat<uchar>(img->bits(),img->height(), 4* img->width());
+    int nTotalPicture = img.height() + 4 * img.width();
+    image = &img;
+    matrix = arma::Mat<uchar>(img.bits(),img.height(), 4* img.width());
 
-  /* Split Image to Matrix per Channel */
-  int height = img->height();
-  int width= img->width();
+    /* Split Image to Matrix per Channel */
+    height = img.height();
+    width= img.width();
 
-  red = arma::zeros<arma::Mat<uchar>>(height, width);
-  green = arma::zeros<arma::Mat<uchar>>(height, width);
-  blue = arma::zeros<arma::Mat<uchar>>(height, width);
-  alpha = arma::zeros<arma::Mat<uchar>>(height, width);
+    red = arma::zeros<arma::Mat<uchar>>(height, width);
+    green = arma::zeros<arma::Mat<uchar>>(height, width);
+    blue = arma::zeros<arma::Mat<uchar>>(height, width);
+    alpha = arma::zeros<arma::Mat<uchar>>(height, width);
 
-
-  uchar * cPointer = img->bits();
-  for( int i = 0; i < img->height() ; i++) {
-    for( int j = 0; j < 4 * img->width() ; j++) {
-      int matrixPosition = i * img->height() + j;
-      int n = j / 4;
-      if ( matrixPosition  % 4 == 0)
-        red(i,n) = *cPointer;
-      if ( matrixPosition % 4 == 1)
-        green(i,n) = *cPointer;
-      if ( matrixPosition  % 4 == 2)
-        blue(i,n) = *cPointer;
-      if ( matrixPosition % 4 == 3)
-        alpha(i,n) = *cPointer;
-      cPointer++;
+    uchar * cPointer = img.bits();
+    for( int i = 0; i < img.height() ; i++) {
+      for( int j = 0; j < img.width() ; j++) {
+        QRgb value = img.pixel(i,j);
+          red(i,j) = (uchar) qRed(value);
+          green(i,j) = (uchar) qGreen(value);
+          blue(i,j) = (uchar) qBlue(value);
+          alpha(i,j) = (uchar)qAlpha(value);
+      }
     }
-  }
 }
 
 void PictureMatrix::setRMatrix(arma::Mat<uchar> m){
@@ -92,10 +85,9 @@ void PictureMatrix::concatChannels(){
   arma::Col<uchar> vecBlue = arma::vectorise(blue);
   arma::Col<uchar> vecGreen = arma::vectorise(green);
   arma::Col<uchar> vecAlpha = arma::vectorise(alpha);
-  vecGreen.zeros();
-  arma::Mat<uchar> temp_mat1 = arma::join_rows(vecRed, vecGreen);
-  arma::Mat<uchar> temp_mat2 = arma::join_rows(vecBlue, vecAlpha);
-  matrix = join_rows(temp_mat1, temp_mat2);
+  arma::Mat<uchar> temp_mat1 = arma::join_rows(vecBlue, vecGreen);
+  arma::Mat<uchar> temp_mat2 = arma::join_rows(vecRed, vecAlpha);
+  matrix = arma::join_rows(temp_mat1, temp_mat2);
   matrix = matrix.t();
 }
 
