@@ -1,6 +1,7 @@
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 #include <iostream>
+#include "picturematrix.h"
 
 // Defined Some usefull Macros
 /*Controller and View */
@@ -12,14 +13,13 @@ MainWindow::MainWindow(QWidget *parent):
     ui->setupUi(this);
     ui->scrollArea->setBackgroundRole(QPalette::Dark);
     setCentralWidget(ui->scrollArea);
-
     setWindowTitle(tr("Filtershop"));
     open("resources/img/Lenna.jpg");
     resize(500, 400);
 }
 
 MainWindow::MainWindow(QString filePath){
-    MainWindow::MainWindow;
+    MainWindow::MainWindow();
     open(filePath);
 }
 
@@ -34,18 +34,23 @@ void MainWindow::open(QString fileName)
 {
   if (!fileName.isEmpty()) {
     this->currentImage = QImage(fileName);
-    this->coreImage = QImage(fileName);
-    if (currentImage.isNull() || coreImage.isNull()) {
+    if (currentImage.isNull()) {
       QMessageBox::information(this, tr("Image Viewer"),
                                tr("Cannot load %1. ").arg(fileName));
       return;
     }
     ui->labelImage->setPixmap(QPixmap::fromImage(currentImage));
+    this->picture = PictureMatrix(currentImage);
     scaleFactor = 1.0;
-
     ui->actionFit_to_window->setEnabled(true);
     ui->actionGaussian_blur->setEnabled(true);
     ui->actionPicture_infos->setEnabled(true);
+    ui->checkBox_blue->setEnabled(true);
+    ui->checkBox_blue->setChecked(true);
+    ui->checkBox_red->setEnabled(true);
+    ui->checkBox_red->setChecked(true);
+    ui->checkBox_green->setEnabled(true);
+    ui->checkBox_green->setChecked(true);
     updateActions();
 
     if (!ui->actionFit_to_window->isChecked())
@@ -56,7 +61,8 @@ void MainWindow::open(QString fileName)
 
 void MainWindow::drawImage()
 {
-  this->ui->labelImage->setPixmap(QPixmap::fromImage((this->currentImage)));
+  this->picture.sendMatrixtoImage();
+  this->ui->labelImage->setPixmap(QPixmap::fromImage(this->currentImage));
 }
 
 void MainWindow::zoomIn()
@@ -100,14 +106,10 @@ void MainWindow::displayInfos()
 
 void MainWindow::gaussianBlur()
 {
-  Filter::gaussianBlur(this->currentImage);
-  drawImage();
 }
 
 void MainWindow::invertImage()
 {
-  Filter::invertImage(this->currentImage);
-  drawImage();
 }
 
 void MainWindow::updateActions()
@@ -172,30 +174,28 @@ void MainWindow::on_actionGaussian_blur_triggered()
     gaussianBlur();
 }
 
-void MainWindow::on_checkBox_blue_toggled(bool checked)
+
+void MainWindow::on_checkBox_green_toggled(bool checked)
 {
-  qDebug() << "Blue toggle";
-  currentImage = coreImage.copy();
-  Filter::display_active_channels(currentImage, ui->checkBox_red->isChecked(), ui->checkBox_green->isChecked(), ui->checkBox_blue->isChecked());
+  qDebug() << "Green toggle";
+  picture.setGChannel(checked);
   drawImage();
 }
 
 void MainWindow::on_checkBox_red_toggled(bool checked)
 {
   qDebug() << "Red toggle";
-  currentImage = coreImage.copy();
-  Filter::display_active_channels(currentImage, ui->checkBox_red->isChecked(), ui->checkBox_green->isChecked(), ui->checkBox_blue->isChecked());
+  picture.setRChannel(checked);
   drawImage();
 }
 
-
-void MainWindow::on_checkBox_green_toggled(bool checked)
+void MainWindow::on_checkBox_blue_toggled(bool checked)
 {
-  qDebug() << "Green toggle";
-  currentImage = coreImage.copy();
-  Filter::display_active_channels(this->currentImage, ui->checkBox_red->isChecked(), ui->checkBox_green->isChecked(), ui->checkBox_blue->isChecked());
+  qDebug() << "Blue toggle";
+  picture.setBChannel(checked);
   drawImage();
 }
+
 
 void MainWindow::on_pushButton_clicked()
 {

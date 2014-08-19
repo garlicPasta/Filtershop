@@ -6,6 +6,7 @@
 #include <QMainWindow>
 #include <QtGui/QtGui>
 #include "filter.hpp"
+#include "picturematrix.h"
 
 namespace Ui {
 class MainWindow;
@@ -19,7 +20,7 @@ public:
   explicit MainWindow(QWidget *parent = 0);
   MainWindow(QString filePath);
   QImage currentImage;
-  QImage coreImage;
+  PictureMatrix picture;
     
 private slots:
   void open();
@@ -32,26 +33,18 @@ private slots:
   void gaussianBlur();
   void invertImage();
 
+  void drawImage();
+
   void on_actionOpen_triggered();
-
   void on_actionZoom_in_triggered();
-
   void on_actionZoom_out_triggered();
-
   void on_actionNormal_size_triggered();
-
   void on_actionFit_to_window_triggered();
-
   void on_actionPicture_infos_triggered();
-
   void on_actionGaussian_blur_triggered();
-
   void on_checkBox_blue_toggled(bool checked);
-
   void on_checkBox_red_toggled(bool checked);
-
   void on_checkBox_green_toggled(bool checked);
-
   void on_pushButton_clicked();
 
 private:
@@ -60,7 +53,6 @@ private:
   void updateActions();
   void scaleImage(double factor);
   void adjustScrollBar(QScrollBar *scrollBar, double factor);
-  void drawImage();
 
   double scaleFactor;
 
