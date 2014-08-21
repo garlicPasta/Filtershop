@@ -3,6 +3,7 @@
 #include <QtGui/QtGui>
 #include "fouriermatrix.hpp"
 #include <iostream>
+
 #define _USE_MATH_DEFINES
 
 MatComplex FourierMatrix::getFourierMatrix(int n){

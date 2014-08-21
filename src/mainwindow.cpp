@@ -199,6 +199,23 @@ void MainWindow::on_checkBox_blue_toggled(bool checked)
 
 void MainWindow::on_pushButton_clicked()
 {
-  Filter::dark_square(currentImage);
   drawImage();
+}
+
+void MainWindow::on_gaussianBlurButton_clicked()
+{
+  picture.gaussianBlur(2);
+  drawImage();
+}
+
+void MainWindow::on_edgeDetectionButton_clicked()
+{
+    picture.edgeDetection();
+    drawImage();
+}
+
+void MainWindow::on_sharpenButton_clicked()
+{
+    picture.sharpen();
+    drawImage();
 }

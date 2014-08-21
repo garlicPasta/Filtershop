@@ -19,7 +19,6 @@
 #include <QApplication>
 #include <iostream>
 #include "mainwindow.hpp"
-#include "filter.hpp"
 
 
 int main(int argv, char **args)

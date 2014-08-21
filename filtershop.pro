@@ -10,12 +10,10 @@ INCLUDEPATH += . src
 # Input
 HEADERS += \
     src/mainwindow.hpp \
-    src/filter.hpp \
     src/fouriermatrix.hpp \
     src/picturematrix.h
 SOURCES += src/main.cpp \  
     src/mainwindow.cpp \
-    src/filter.cpp \
     src/fouriermatrix.cpp \
     src/picturematrix.cpp
 CONFIG += testcase console

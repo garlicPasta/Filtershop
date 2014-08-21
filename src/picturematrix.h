@@ -18,23 +18,26 @@ public:
     void setBChannel(bool value);
     void setAChannel(bool value);
     void gaussianBlur(int size);
+    void sharpen();
+    void edgeDetection();
 
 private:
     int height;
     int width;
     arma::Mat<uchar> matrix;
     //RGBa
-    arma::Cube<uchar> channels;
+    arma::Cube<double> channels;
     bool activeChannel[4] = {true, true, true, true}; //RGBa
 
-    void concatChannels();
     enum extendMode{same, black, white, cylindric};
+
+    void concatChannels();
     void extendMat(int offset, extendMode mode);
-    void shrinkMat(int offset);
-    void setRMatrix(arma::Mat<uchar> m);
-    void setGMatrix(arma::Mat<uchar> m);
-    void setAMatrix(arma::Mat<uchar> m);
-    void setBMatrix(arma::Mat<uchar> m);
+    void setRMatrix(arma::Mat<double> m);
+    void setGMatrix(arma::Mat<double> m);
+    void setAMatrix(arma::Mat<double> m);
+    void setBMatrix(arma::Mat<double> m);
+    void convo(arma::Mat<double> m);
 
 };
 #endif // PICTUREMATRIX_H
